@@ -1,5 +1,5 @@
 // Written by Matthew Spiller
-// July 13, 2022
+// Updated: July 13, 2022
 
 // For storing the game generated pattern
 var gamePattern = [];
@@ -37,32 +37,21 @@ $(".btn").click(function() {
 
     var colorSelected = $(this)[0].id;
 
-    // The color selected by the user is added to their pattern array
-    userPattern.push(colorSelected);
-
     // The previous audio source is stopped and the new one plays
     stopAudio(previousColor);
     playAudio(colorSelected);
     previousColor = colorSelected;
 
-    // When user pattern is the same size as the game pattern, the round is over
-    if (userPattern.length == gamePattern.length)
+    // The color selected by the user is added to their pattern array
+    userPattern.push(colorSelected);
+
+    // Checks to make sure that the most recent user input matches the generated pattern at the given index
+    checkValidityOfInput(userPattern.length - 1);
+
+    // When user pattern is the same size as the game pattern and the game is still running, then the user wins the round
+    if (userPattern.length == gamePattern.length && gameRunning)
     {
-      for (let i = 0; i < userPattern.length; i++)
-      {
-        // Check equality between the two arrays
-        if (userPattern[i] != gamePattern[i])
-        {
-          // If the user array differes from the generated pattern, the user loses
-          playerLoses();
-          break;
-        }
-      }
-      if (gameRunning)
-      {
-        // Patterns match, user wins
-        playerWins();
-      }
+      playerWins();
     }
   }
 });
@@ -95,6 +84,14 @@ function createPattern ()
   var randomColor = colors[randomNumber];
   gamePattern.push(randomColor);
   animatePattern(0);
+}
+
+function checkValidityOfInput (index)
+{
+  if(userPattern[index] != gamePattern[index])
+  {
+    playerLoses();
+  }
 }
 
 /*
