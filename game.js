@@ -11,7 +11,7 @@ var userPattern = [];
 var colors = ["green", "red", "yellow", "blue"];
 
 // Audio sources corresponding to colors
-var audios = [new Audio("sounds/green.mp3"), new Audio("sounds/red.mp3"), new Audio("sounds/yellow.mp3"), new Audio("sounds/blue.mp3")];
+var audios = [new Audio("sounds/green.mp3"), new Audio("sounds/red.mp3"), new Audio("sounds/yellow.mp3"), new Audio("sounds/blue.mp3"), new Audio("sounds/wrong.mp3")];
 
 // is true when the game is being played
 var gameRunning = false;
@@ -177,6 +177,7 @@ function stopAudio(color)
 // When the player loses the game
 function playerLoses()
 {
+  audios[4].play();
   $(".buttons").css({"margin-top": "1rem"});
   $("#level-title").css({"padding-top": "0"});
   $("h1").html("Incorrect").css({"padding-top": ""});
