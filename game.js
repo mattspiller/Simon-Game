@@ -1,5 +1,5 @@
 // Written by Matthew Spiller
-// Updated: July 13, 2022
+// July 13, 2022
 
 // For storing the game generated pattern
 var gamePattern = [];
@@ -11,7 +11,7 @@ var userPattern = [];
 var colors = ["green", "red", "yellow", "blue"];
 
 // Audio sources corresponding to colors
-var audios = [new Audio("sounds/green.mp3"), new Audio("sounds/red.mp3"), new Audio("sounds/yellow.mp3"), new Audio("sounds/blue.mp3"), new Audio("sounds/wrong.mp3")];
+var audios = [new Audio("sounds/green.mp3"), new Audio("sounds/red.mp3"), new Audio("sounds/yellow.mp3"), new Audio("sounds/blue.mp3"), new Audio("sounds/wrong.mp3"), new Audio("sounds/correct.wav")];
 
 // is true when the game is being played
 var gameRunning = false;
@@ -21,6 +21,9 @@ var acceptingInput = false;
 
 // to keep track of the round
 var currentRound = 1;
+
+// The number of milliseconds between each button animation
+var speed = 500;
 
 // to stop audio of the previous color to prevent audio sources playing over each other
 var previousColor = "";
@@ -51,7 +54,8 @@ $(".btn").click(function() {
     // When user pattern is the same size as the game pattern and the game is still running, then the user wins the round
     if (userPattern.length == gamePattern.length && gameRunning)
     {
-      playerWins();
+      setTimeout(playerWins, 200);
+      //playerWins();
     }
   }
 });
@@ -113,7 +117,13 @@ function animatePattern(position)
   playAudio(color);
   previousColor = color;
   $("#" + color).fadeIn(100);
-  setTimeout(animatePattern, 333, ++position);
+
+  if (speed > 250)
+  {
+    speed -= 10;
+  }
+
+  setTimeout(animatePattern, speed, ++position);
 };
 
 // plays the audio corresponding to the color
@@ -174,6 +184,7 @@ function stopAudio(color)
 // When the player loses the game
 function playerLoses()
 {
+  stopAudio(previousColor);
   audios[4].play();
   $(".buttons").css({"margin-top": "1rem"});
   $("#level-title").css({"padding-top": "0"});
@@ -185,11 +196,14 @@ function playerLoses()
   gamePattern = [];
   userPattern = [];
   currentRound = 1;
+  speed = 500;
 }
 
 // When the player wins the round
 function playerWins()
 {
+  stopAudio(previousColor);
+  audios[5].play();
   $("h1").html("Correct");
   userPattern = [];
   acceptingInput = false;
